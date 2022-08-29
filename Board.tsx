@@ -127,7 +127,6 @@ const Board = (props) => {
   };
 
   return (
-
     <SafeAreaView style={styles.container}>
       <ImageBackground source={require("./assets/movie.png")}>
         <View style={styles.header}>
@@ -140,27 +139,33 @@ const Board = (props) => {
           <Text style={styles.textHeader}>Categories</Text>
           <Ionicons name="search" size={24} color="white" />
         </View>
+        <View style={styles.divider} />
 
         <FlatList
           data={movies}
           ListHeaderComponent={<Text style={[styles.text]}> Upcoming</Text>}
           ListHeaderComponentStyle={{ position: "absolute" }}
           renderItem={({ item }) => (
-
-             <>
-          <ModalInfoMovie modalInfoMovie={modalInfoMovie} setModalInfoMovie={setModalInfoMovie} dataMovie={item}/>
-          <TouchableOpacity 
-            style={styles.container}
-            onPress={() => {setModalInfoMovie(true)}}
-          >
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
-              }}
-              style={styles.tinyLogo}
-            />
-          </TouchableOpacity>
-          </>
+            <>
+              <ModalInfoMovie
+                modalInfoMovie={modalInfoMovie}
+                setModalInfoMovie={setModalInfoMovie}
+                dataMovie={item}
+              />
+              <TouchableOpacity
+                style={styles.container}
+                onPress={() => {
+                  setModalInfoMovie(true);
+                }}
+              >
+                <Image
+                  source={{
+                    uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
+                  }}
+                  style={styles.tinyLogo}
+                />
+              </TouchableOpacity>
+            </>
           )}
           keyExtractor={(item) => item.id.toString()}
           horizontal={true}
@@ -231,8 +236,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   header: {
-    marginTop: 5,
-    marginBottom: 20,
+    marginTop: 10,
+    marginBottom: 15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
@@ -261,5 +266,13 @@ const styles = StyleSheet.create({
   mainLogo: {
     width: 45,
     height: 45,
+  },
+  divider: {
+    backgroundColor: "#28ABD1",
+    height: 4,
+    width: "90%",
+    alignSelf: "center",
+    borderRadius: 15,
+    marginBottom: 10,
   },
 });
