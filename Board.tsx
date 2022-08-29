@@ -13,10 +13,12 @@ import {
   FlatList,
   SafeAreaView,
   ImageBackground,
+  TouchableOpacity,
 } from "react-native";
 import { Platform } from "react-native";
 import { setMoviesList } from "./store/slices/movies";
 import { setNowPlaying } from "./store/slices/nowPlaying";
+import { ModalInfoMovie } from "./ModalInfoMovie";
 
 const Board = (props) => {
   const dispatch = useDispatch();
@@ -31,6 +33,8 @@ const Board = (props) => {
   const { list: nowPlaying } = useSelector((state) => state.nowPlaying);
   const { list: popular } = useSelector((state) => state.popular);
 
+  const [modalInfoMovie, setModalInfoMovie] = React.useState(false);
+  const [dataMovie, setDataMovie] = React.useState("");
   const [search, setSearch] = React.useState("");
   const [filteredDataSource, setFilteredDataSource] = React.useState([]);
   const [masterDataSource, setMasterDataSource] = React.useState([]);
@@ -80,6 +84,29 @@ const Board = (props) => {
       </Text>
     );
   };
+
+  const ItemMovies = ({ item, index }) => (
+    <>
+      <ModalInfoMovie
+        modalInfoMovie={modalInfoMovie}
+        setModalInfoMovie={setModalInfoMovie}
+        dataMovie={item}
+      />
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => {
+          setModalInfoMovie(true);
+        }}
+      >
+        <Image
+          source={{
+            uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
+          }}
+          style={styles.tinyLogo}
+        />
+      </TouchableOpacity>
+    </>
+  );
 
   const ItemSeparatorView = () => {
     return (
