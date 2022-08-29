@@ -2,7 +2,7 @@ import React from "react";
 import { fetchMovieList } from "./store/slices/movies";
 import { fetchNowPlaying } from "./store/slices/nowPlaying";
 import { fetchPopular } from "./store/slices/popular";
-
+import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
   View,
@@ -11,7 +11,10 @@ import {
   Text,
   TextInput,
   FlatList,
+  SafeAreaView,
+  ImageBackground,
 } from "react-native";
+import { Platform } from "react-native";
 import { setMoviesList } from "./store/slices/movies";
 import { setNowPlaying } from "./store/slices/nowPlaying";
 
@@ -97,72 +100,105 @@ const Board = (props) => {
   };
 
   return (
-    <View>
-      <TextInput
-        style={styles.textInputStyle}
-        onChangeText={(text) => searchFilterFunction(text)}
-        value={search}
-        underlineColorAndroid="transparent"
-        placeholder="Search Here"
-      />
-      <Text> Upcoming</Text>
-      <FlatList
-        data={movies}
-        renderItem={({ item }) => (
-          <View style={styles.container}>
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
-              }}
-              style={styles.tinyLogo}
-            />
-          </View>
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal={true}
-      />
-      <Text> Top Rated</Text>
+    <SafeAreaView style={styles.container}>
+      <ImageBackground source={require("./assets/movie.png")}>
+        <View style={styles.header}>
+          <Image
+            source={require("./assets/logo.png")}
+            style={styles.mainLogo}
+          />
 
-      <FlatList
-        data={nowPlaying}
-        renderItem={({ item }) => (
-          <View style={styles.container}>
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
-              }}
-              style={styles.tinyLogo}
-            />
-          </View>
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal={true}
-      />
-      <Text> Now Playing</Text>
+          <Text style={styles.textHeader}>TV Show</Text>
+          <Text style={styles.textHeader}>Categories</Text>
+          <Ionicons name="search" size={24} color="white" />
+        </View>
 
-      <FlatList
-        data={popular}
-        renderItem={({ item }) => (
-          <View style={styles.container}>
+        <FlatList
+          data={movies}
+          ListHeaderComponent={<Text style={[styles.text]}> Upcoming</Text>}
+          ListHeaderComponentStyle={{ position: "absolute" }}
+          renderItem={({ item }) => (
             <Image
               source={{
                 uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
               }}
-              style={styles.tinyLogo}
+              style={[styles.tinyLogo, styles.backgrounds]}
             />
-          </View>
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal={true}
-      />
-    </View>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal={true}
+        />
+
+        <FlatList
+          data={nowPlaying}
+          ListHeaderComponent={<Text style={[styles.text]}> Top Rated</Text>}
+          ListHeaderComponentStyle={{ position: "absolute" }}
+          renderItem={({ item }) => (
+            <Image
+              source={{
+                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
+              }}
+              style={[styles.tinyLogo, styles.backgrounds]}
+            />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal={true}
+        />
+
+        <FlatList
+          data={popular}
+          ListHeaderComponent={<Text style={[styles.text]}>Now Playing</Text>}
+          ListHeaderComponentStyle={{ position: "absolute" }}
+          renderItem={({ item }) => (
+            <Image
+              source={{
+                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
+              }}
+              style={[styles.tinyLogo, styles.backgrounds]}
+            />
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal={true}
+        />
+      </ImageBackground>
+    </SafeAreaView>
   );
 };
 export default Board;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
+    flex: 1,
+    alignSelf: "center",
+  },
+  searchContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    justifyContent: "space-evenly",
+  },
+  backgrounds: {
+    padding: 8,
+    alignSelf: "center",
+  },
+  textInputStyle: {
+    height: 40,
+    width: "80%",
+    borderWidth: 1,
+    paddingLeft: 20,
+    margin: 5,
+    backgroundColor: "#f1f1f1",
+    borderRadius: 10,
+    textAlign: "center",
+  },
+  header: {
+    marginTop: 5,
+    marginBottom: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
   },
   tinyLogo: {
     width: 100,
@@ -177,12 +213,16 @@ const styles = StyleSheet.create({
   itemStyle: {
     padding: 10,
   },
-  textInputStyle: {
-    height: 40,
-    borderWidth: 1,
-    paddingLeft: 20,
-    margin: 5,
-    borderColor: "#009688",
-    backgroundColor: "#FFFFFF",
+  text: {
+    color: "white",
+    fontSize: 25,
+  },
+  textHeader: {
+    color: "white",
+    fontSize: 18,
+  },
+  mainLogo: {
+    width: 45,
+    height: 45,
   },
 });
