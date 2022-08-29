@@ -18,12 +18,29 @@ import { setNowPlaying } from "./store/slices/nowPlaying";
 import { ModalInfoMovie } from "./ModalInfoMovie";
 
 const Board = (props) => {
+
   const dispatch = useDispatch();
+
+  // React.useEffect(() => {
+  //   dispatch(fetchMovieList("upcoming"));
+  //   dispatch(fetchNowPlaying("now_playing"));
+  //   dispatch(fetchPopular("top_rated"));
+  // }, []);
 
   React.useEffect(() => {
     dispatch(fetchMovieList("upcoming"));
     dispatch(fetchNowPlaying("now_playing"));
     dispatch(fetchPopular("top_rated"));
+
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setFilteredDataSource(responseJson);
+        setMasterDataSource(responseJson);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   const { list: movies } = useSelector((state) => state.movies);
@@ -36,17 +53,7 @@ const Board = (props) => {
   const [filteredDataSource, setFilteredDataSource] = React.useState([]);
   const [masterDataSource, setMasterDataSource] = React.useState([]);
 
-  React.useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setFilteredDataSource(responseJson);
-        setMasterDataSource(responseJson);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+
 
   const searchFilterFunction = (text) => {
     // Check if searched text is not blank
@@ -82,12 +89,11 @@ const Board = (props) => {
     );
   };
 
-  const ItemMovies = ({ item, index }) => (
+  const ItemMovies = ({ item }) => (
     <>
-    <ModalInfoMovie modalInfoMovie={modalInfoMovie} setModalInfoMovie={setModalInfoMovie} dataMovie={item}/>
     <TouchableOpacity 
       style={styles.container}
-      onPress={() => {setModalInfoMovie(true)}}
+      onPress={() => {setModalInfoMovie(true); setDataMovie(item)}}
     >
       <Image
         source={{
@@ -120,8 +126,12 @@ const Board = (props) => {
   return (
 
     <View>
-      {/* <ModalInfoMovie modalInfoMovie={modalInfoMovie} setModalInfoMovie={setModalInfoMovie} dataMovie={dataMovie} /> */}
-  
+      <ModalInfoMovie 
+        modalInfoMovie={modalInfoMovie} 
+        setModalInfoMovie={setModalInfoMovie} 
+        dataMovie={dataMovie}
+      />
+
       <TextInput
         style={styles.textInputStyle}
         onChangeText={(text) => searchFilterFunction(text)}
@@ -132,22 +142,7 @@ const Board = (props) => {
       <Text style={{color:"white"}}  > Upcoming</Text>
       <FlatList
         data={movies}
-        renderItem={({ item, index }) => (
-          <>
-          <ModalInfoMovie modalInfoMovie={modalInfoMovie} setModalInfoMovie={setModalInfoMovie} dataMovie={item}/>
-          <TouchableOpacity 
-            style={styles.container}
-            onPress={() => {setModalInfoMovie(true)}}
-          >
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
-              }}
-              style={styles.tinyLogo}
-            />
-          </TouchableOpacity>
-          </>
-        )}
+        renderItem={ItemMovies}
         keyExtractor={(item) => item.id.toString()}
         horizontal={true}
       />
@@ -155,16 +150,7 @@ const Board = (props) => {
 
       <FlatList
         data={nowPlaying}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.container}>
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
-              }}
-              style={styles.tinyLogo}
-            />
-          </TouchableOpacity>
-        )}
+        renderItem={ItemMovies}
         keyExtractor={(item) => item.id.toString()}
         horizontal={true}
       />
@@ -172,16 +158,7 @@ const Board = (props) => {
 
       <FlatList
         data={popular}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.container}>
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
-              }}
-              style={styles.tinyLogo}
-            />
-          </TouchableOpacity>
-        )}
+        renderItem={ItemMovies}
         keyExtractor={(item) => item.id.toString()}
         horizontal={true}
       />
