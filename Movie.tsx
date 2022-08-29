@@ -11,6 +11,7 @@ import {
   Text,
   TextInput,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 import { setMoviesList } from "./store/slices/movies";
 import { setNowPlaying } from "./store/slices/nowPlaying";
@@ -110,12 +111,14 @@ const Board = (props) => {
         data={movies}
         renderItem={({ item }) => (
           <View style={styles.container}>
+          
             <Image
               source={{
                 uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
               }}
               style={styles.tinyLogo}
             />
+            
           </View>
         )}
         keyExtractor={(item) => item.id.toString()}
