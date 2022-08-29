@@ -127,6 +127,7 @@ const Board = (props) => {
   };
 
   return (
+
     <SafeAreaView style={styles.container}>
       <ImageBackground source={require("./assets/movie.png")}>
         <View style={styles.header}>
@@ -145,12 +146,21 @@ const Board = (props) => {
           ListHeaderComponent={<Text style={[styles.text]}> Upcoming</Text>}
           ListHeaderComponentStyle={{ position: "absolute" }}
           renderItem={({ item }) => (
+
+             <>
+          <ModalInfoMovie modalInfoMovie={modalInfoMovie} setModalInfoMovie={setModalInfoMovie} dataMovie={item}/>
+          <TouchableOpacity 
+            style={styles.container}
+            onPress={() => {setModalInfoMovie(true)}}
+          >
             <Image
               source={{
                 uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
               }}
-              style={[styles.tinyLogo, styles.backgrounds]}
+              style={styles.tinyLogo}
             />
+          </TouchableOpacity>
+          </>
           )}
           keyExtractor={(item) => item.id.toString()}
           horizontal={true}
