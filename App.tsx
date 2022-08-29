@@ -14,7 +14,6 @@ export default function App() {
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
           <StatusBar style="auto" />
-          <Text>Logo</Text>
           <Board />
         </View>
       </SafeAreaView>
@@ -25,7 +24,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
+    marginTop: 15,
     alignItems: "center",
     justifyContent: "center",
   },
