@@ -11,9 +11,11 @@ import {
   Text,
   TextInput,
   FlatList,
+  TouchableOpacity
 } from "react-native";
 import { setMoviesList } from "./store/slices/movies";
 import { setNowPlaying } from "./store/slices/nowPlaying";
+import { ModalInfoMovie } from "./ModalInfoMovie";
 
 const Board = (props) => {
   const dispatch = useDispatch();
@@ -28,6 +30,8 @@ const Board = (props) => {
   const { list: nowPlaying } = useSelector((state) => state.nowPlaying);
   const { list: popular } = useSelector((state) => state.popular);
 
+  const [modalInfoMovie, setModalInfoMovie] = React.useState(false);
+  const [dataMovie, setDataMovie] = React.useState("");
   const [search, setSearch] = React.useState("");
   const [filteredDataSource, setFilteredDataSource] = React.useState([]);
   const [masterDataSource, setMasterDataSource] = React.useState([]);
@@ -78,6 +82,23 @@ const Board = (props) => {
     );
   };
 
+  const ItemMovies = ({ item, index }) => (
+    <>
+    <ModalInfoMovie modalInfoMovie={modalInfoMovie} setModalInfoMovie={setModalInfoMovie} dataMovie={item}/>
+    <TouchableOpacity 
+      style={styles.container}
+      onPress={() => {setModalInfoMovie(true)}}
+    >
+      <Image
+        source={{
+          uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
+        }}
+        style={styles.tinyLogo}
+      />
+    </TouchableOpacity>
+    </>
+  )
+
   const ItemSeparatorView = () => {
     return (
       // Flat List Item Separator
@@ -97,7 +118,10 @@ const Board = (props) => {
   };
 
   return (
+
     <View>
+      {/* <ModalInfoMovie modalInfoMovie={modalInfoMovie} setModalInfoMovie={setModalInfoMovie} dataMovie={dataMovie} /> */}
+  
       <TextInput
         style={styles.textInputStyle}
         onChangeText={(text) => searchFilterFunction(text)}
@@ -105,19 +129,10 @@ const Board = (props) => {
         underlineColorAndroid="transparent"
         placeholder="Search Here"
       />
-      <Text> Upcoming</Text>
+      <Text style={{color:"white"}}  > Upcoming</Text>
       <FlatList
         data={movies}
-        renderItem={({ item }) => (
-          <View style={styles.container}>
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
-              }}
-              style={styles.tinyLogo}
-            />
-          </View>
-        )}
+        renderItem={ItemMovies}
         keyExtractor={(item) => item.id.toString()}
         horizontal={true}
       />
@@ -126,14 +141,14 @@ const Board = (props) => {
       <FlatList
         data={nowPlaying}
         renderItem={({ item }) => (
-          <View style={styles.container}>
+          <TouchableOpacity style={styles.container}>
             <Image
               source={{
                 uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
               }}
               style={styles.tinyLogo}
             />
-          </View>
+          </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id.toString()}
         horizontal={true}
@@ -143,14 +158,14 @@ const Board = (props) => {
       <FlatList
         data={popular}
         renderItem={({ item }) => (
-          <View style={styles.container}>
+          <TouchableOpacity style={styles.container}>
             <Image
               source={{
                 uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
               }}
               style={styles.tinyLogo}
             />
-          </View>
+          </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id.toString()}
         horizontal={true}
