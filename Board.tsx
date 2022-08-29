@@ -132,7 +132,22 @@ const Board = (props) => {
       <Text style={{color:"white"}}  > Upcoming</Text>
       <FlatList
         data={movies}
-        renderItem={ItemMovies}
+        renderItem={({ item, index }) => (
+          <>
+          <ModalInfoMovie modalInfoMovie={modalInfoMovie} setModalInfoMovie={setModalInfoMovie} dataMovie={item}/>
+          <TouchableOpacity 
+            style={styles.container}
+            onPress={() => {setModalInfoMovie(true)}}
+          >
+            <Image
+              source={{
+                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
+              }}
+              style={styles.tinyLogo}
+            />
+          </TouchableOpacity>
+          </>
+        )}
         keyExtractor={(item) => item.id.toString()}
         horizontal={true}
       />

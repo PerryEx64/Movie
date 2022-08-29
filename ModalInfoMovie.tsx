@@ -15,7 +15,7 @@ export const ModalInfoMovie = ({modalInfoMovie, setModalInfoMovie, dataMovie}) =
         <View style={styles.container}>
           <View style={styles.containerModal}>
             <View style={styles.marginPaddingContainer}>
-<Text style={{color: 'white'}} >{dataMovie.original_title}</Text>
+<Text style={{color: 'white'}} >{dataMovie.vote_count}</Text>
             </View>
             </View>
             </View>
