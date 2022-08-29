@@ -148,31 +148,33 @@ const Board = (props) => {
         setModalInfoMovie={setModalInfoMovie} 
         dataMovie={dataMovie}
       />
-
-      <TextInput
+      <View style={{ alignItems: 'center'}}>
+        <TextInput
         style={styles.textInputStyle}
         onChangeText={(text) => searchFilterFunction(text)}
         value={search}
         underlineColorAndroid="transparent"
         placeholder="Search Here"
       />
-      <Text style={{color:"white"}}  > Upcoming</Text>
+      </View>
+      
+      <Text style={styles.text}  >{"Upcoming"}</Text>
       <FlatList
         data={movies}
         renderItem={ItemMovies}
         keyExtractor={(item) => item.id.toString()}
         horizontal={true}
       />
-      <Text> Top Rated</Text>
 
+      <Text style={styles.text} >{"Top Rated"}</Text>
       <FlatList
         data={nowPlaying}
         renderItem={ItemMovies}
         keyExtractor={(item) => item.id.toString()}
         horizontal={true}
       />
-      <Text> Now Playing</Text>
 
+      <Text style={styles.text} >{"Now Playing"}</Text>
       <FlatList
         data={popular}
         renderItem={ItemMovies}
@@ -237,7 +239,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    fontSize: 25,
+    fontSize: 17,
+    fontWeight: "bold",
   },
   textHeader: {
     color: "white",

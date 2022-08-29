@@ -24,7 +24,7 @@ export const ModalInfoMovie = ({modalInfoMovie, setModalInfoMovie, dataMovie}) =
                   <Text style={{ fontSize: 20 }}>{dataMovie.title}</Text>
                   <Text style={{ fontSize: 13, fontStyle: "italic" }}>
                     {" "}
-                    ({dataMovie.release_date}){" "}
+                    ({dataMovie.release_date ? dateStringToYear(dataMovie.release_date): "Awaiting"}){" "}
                   </Text>
                 </Text>
               </View>
