@@ -2,7 +2,7 @@ import React from "react";
 import { fetchMovieList } from "./store/slices/movies";
 import { fetchNowPlaying } from "./store/slices/nowPlaying";
 import { fetchPopular } from "./store/slices/popular";
-
+import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
   View,
@@ -11,8 +11,11 @@ import {
   Text,
   TextInput,
   FlatList,
-  TouchableOpacity
+  SafeAreaView,
+  ImageBackground,
+  TouchableOpacity,
 } from "react-native";
+import { Platform } from "react-native";
 import { setMoviesList } from "./store/slices/movies";
 import { setNowPlaying } from "./store/slices/nowPlaying";
 import { ModalInfoMovie } from "./ModalInfoMovie";
@@ -78,19 +81,20 @@ const Board = (props) => {
     }
   };
 
-  const ItemView = ({ item }) => {
-    return (
-      // Flat List Item
-      <Text style={styles.itemStyle} onPress={() => getItem(item)}>
-        {item.id}
-        {"."}
-        {item.title.toUpperCase()}
-      </Text>
-    );
-  };
+  // const ItemView = ({ item }) => {
+  //   return (
+  //     // Flat List Item
+  //     <Text style={styles.itemStyle} onPress={() => getItem(item)}>
+  //       {item.id}
+  //       {"."}
+  //       {item.title.toUpperCase()}
+  //     </Text>
+  //   );
+  // };
 
   const ItemMovies = ({ item }) => (
-    <>
+
+
     <TouchableOpacity 
       style={styles.container}
       onPress={() => {setModalInfoMovie(true); setDataMovie(item)}}
@@ -100,12 +104,12 @@ const Board = (props) => {
           uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
         }}
         style={styles.tinyLogo}
-      />
-    </TouchableOpacity>
-    </>
-  )
+        />
+        </TouchableOpacity>
 
-  const ItemSeparatorView = () => {
+  );
+
+  {/* const ItemSeparatorView = () => {
     return (
       // Flat List Item Separator
       <View
@@ -116,14 +120,27 @@ const Board = (props) => {
         }}
       />
     );
-  };
+  }; */}
 
-  const getItem = (item) => {
+  {/* const getItem = (item) => {
     // Function for click on an item
     alert("Id : " + item.id + " Title : " + item.title);
-  };
+  }; */}
 
   return (
+    <SafeAreaView style={styles.container}>
+      <ImageBackground source={require("./assets/movie.png")}>
+        <View style={styles.header}>
+          <Image
+            source={require("./assets/logo.png")}
+            style={styles.mainLogo}
+          />
+          <Text style={styles.textHeader}>TV Show</Text>
+          <Text style={styles.textHeader}>Categories</Text>
+          <Ionicons name="search" size={24} color="white" />
+        </View>
+        <View style={styles.divider} />
+
 
     <View>
       <ModalInfoMovie 
@@ -163,13 +180,47 @@ const Board = (props) => {
         horizontal={true}
       />
     </View>
+
+      </ImageBackground>
+    </SafeAreaView>
+
   );
 };
 export default Board;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
+    flex: 1,
+    alignSelf: "center",
+  },
+  searchContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    justifyContent: "space-evenly",
+  },
+  backgrounds: {
+    padding: 8,
+    alignSelf: "center",
+  },
+  textInputStyle: {
+    height: 40,
+    width: "80%",
+    borderWidth: 1,
+    paddingLeft: 20,
+    margin: 5,
+    backgroundColor: "#f1f1f1",
+    borderRadius: 10,
+    textAlign: "center",
+  },
+  header: {
+    marginTop: 10,
+    marginBottom: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
   },
   tinyLogo: {
     width: 100,
@@ -184,12 +235,24 @@ const styles = StyleSheet.create({
   itemStyle: {
     padding: 10,
   },
-  textInputStyle: {
-    height: 40,
-    borderWidth: 1,
-    paddingLeft: 20,
-    margin: 5,
-    borderColor: "#009688",
-    backgroundColor: "#FFFFFF",
+  text: {
+    color: "white",
+    fontSize: 25,
+  },
+  textHeader: {
+    color: "white",
+    fontSize: 18,
+  },
+  mainLogo: {
+    width: 45,
+    height: 45,
+  },
+  divider: {
+    backgroundColor: "#28ABD1",
+    height: 4,
+    width: "90%",
+    alignSelf: "center",
+    borderRadius: 15,
+    marginBottom: 10,
   },
 });
