@@ -21,12 +21,29 @@ import { setNowPlaying } from "./store/slices/nowPlaying";
 import { ModalInfoMovie } from "./ModalInfoMovie";
 
 const Board = (props) => {
+
   const dispatch = useDispatch();
+
+  // React.useEffect(() => {
+  //   dispatch(fetchMovieList("upcoming"));
+  //   dispatch(fetchNowPlaying("now_playing"));
+  //   dispatch(fetchPopular("top_rated"));
+  // }, []);
 
   React.useEffect(() => {
     dispatch(fetchMovieList("upcoming"));
     dispatch(fetchNowPlaying("now_playing"));
     dispatch(fetchPopular("top_rated"));
+
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setFilteredDataSource(responseJson);
+        setMasterDataSource(responseJson);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   const { list: movies } = useSelector((state) => state.movies);
@@ -39,17 +56,7 @@ const Board = (props) => {
   const [filteredDataSource, setFilteredDataSource] = React.useState([]);
   const [masterDataSource, setMasterDataSource] = React.useState([]);
 
-  React.useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setFilteredDataSource(responseJson);
-        setMasterDataSource(responseJson);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+
 
   const searchFilterFunction = (text) => {
     // Check if searched text is not blank
@@ -74,41 +81,35 @@ const Board = (props) => {
     }
   };
 
-  const ItemView = ({ item }) => {
-    return (
-      // Flat List Item
-      <Text style={styles.itemStyle} onPress={() => getItem(item)}>
-        {item.id}
-        {"."}
-        {item.title.toUpperCase()}
-      </Text>
-    );
-  };
+  // const ItemView = ({ item }) => {
+  //   return (
+  //     // Flat List Item
+  //     <Text style={styles.itemStyle} onPress={() => getItem(item)}>
+  //       {item.id}
+  //       {"."}
+  //       {item.title.toUpperCase()}
+  //     </Text>
+  //   );
+  // };
 
-  const ItemMovies = ({ item, index }) => (
-    <>
-      <ModalInfoMovie
-        modalInfoMovie={modalInfoMovie}
-        setModalInfoMovie={setModalInfoMovie}
-        dataMovie={item}
-      />
-      <TouchableOpacity
-        style={styles.container}
-        onPress={() => {
-          setModalInfoMovie(true);
+  const ItemMovies = ({ item }) => (
+
+
+    <TouchableOpacity 
+      style={styles.container}
+      onPress={() => {setModalInfoMovie(true); setDataMovie(item)}}
+    >
+      <Image
+        source={{
+          uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
         }}
-      >
-        <Image
-          source={{
-            uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
-          }}
-          style={styles.tinyLogo}
+        style={styles.tinyLogo}
         />
-      </TouchableOpacity>
-    </>
+        </TouchableOpacity>
+
   );
 
-  const ItemSeparatorView = () => {
+  {/* const ItemSeparatorView = () => {
     return (
       // Flat List Item Separator
       <View
@@ -119,12 +120,12 @@ const Board = (props) => {
         }}
       />
     );
-  };
+  }; */}
 
-  const getItem = (item) => {
+  {/* const getItem = (item) => {
     // Function for click on an item
     alert("Id : " + item.id + " Title : " + item.title);
-  };
+  }; */}
 
   return (
     <SafeAreaView style={styles.container}>
@@ -134,76 +135,57 @@ const Board = (props) => {
             source={require("./assets/logo.png")}
             style={styles.mainLogo}
           />
-
           <Text style={styles.textHeader}>TV Show</Text>
           <Text style={styles.textHeader}>Categories</Text>
           <Ionicons name="search" size={24} color="white" />
         </View>
         <View style={styles.divider} />
 
-        <FlatList
-          data={movies}
-          ListHeaderComponent={<Text style={[styles.text]}> Upcoming</Text>}
-          ListHeaderComponentStyle={{ position: "absolute" }}
-          renderItem={({ item }) => (
-            <>
-              <ModalInfoMovie
-                modalInfoMovie={modalInfoMovie}
-                setModalInfoMovie={setModalInfoMovie}
-                dataMovie={item}
-              />
-              <TouchableOpacity
-                style={styles.container}
-                onPress={() => {
-                  setModalInfoMovie(true);
-                }}
-              >
-                <Image
-                  source={{
-                    uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
-                  }}
-                  style={styles.tinyLogo}
-                />
-              </TouchableOpacity>
-            </>
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          horizontal={true}
-        />
 
-        <FlatList
-          data={nowPlaying}
-          ListHeaderComponent={<Text style={[styles.text]}> Top Rated</Text>}
-          ListHeaderComponentStyle={{ position: "absolute" }}
-          renderItem={({ item }) => (
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
-              }}
-              style={[styles.tinyLogo, styles.backgrounds]}
-            />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          horizontal={true}
-        />
+    <View>
+      <ModalInfoMovie 
+        modalInfoMovie={modalInfoMovie} 
+        setModalInfoMovie={setModalInfoMovie} 
+        dataMovie={dataMovie}
+      />
+      <View style={{ alignItems: 'center'}}>
+        <TextInput
+        style={styles.textInputStyle}
+        onChangeText={(text) => searchFilterFunction(text)}
+        value={search}
+        underlineColorAndroid="transparent"
+        placeholder="Search Here"
+      />
+      </View>
+      
+      <Text style={styles.text}  >{"Upcoming"}</Text>
+      <FlatList
+        data={movies}
+        renderItem={ItemMovies}
+        keyExtractor={(item) => item.id.toString()}
+        horizontal={true}
+      />
 
-        <FlatList
-          data={popular}
-          ListHeaderComponent={<Text style={[styles.text]}>Now Playing</Text>}
-          ListHeaderComponentStyle={{ position: "absolute" }}
-          renderItem={({ item }) => (
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/original/${item.poster_path}`,
-              }}
-              style={[styles.tinyLogo, styles.backgrounds]}
-            />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          horizontal={true}
-        />
+      <Text style={styles.text} >{"Top Rated"}</Text>
+      <FlatList
+        data={nowPlaying}
+        renderItem={ItemMovies}
+        keyExtractor={(item) => item.id.toString()}
+        horizontal={true}
+      />
+
+      <Text style={styles.text} >{"Now Playing"}</Text>
+      <FlatList
+        data={popular}
+        renderItem={ItemMovies}
+        keyExtractor={(item) => item.id.toString()}
+        horizontal={true}
+      />
+    </View>
+
       </ImageBackground>
     </SafeAreaView>
+
   );
 };
 export default Board;
@@ -257,7 +239,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    fontSize: 25,
+    fontSize: 17,
+    fontWeight: "bold",
   },
   textHeader: {
     color: "white",

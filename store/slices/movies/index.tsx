@@ -14,7 +14,9 @@ export const moviesSlice = createSlice({
   reducers: {
     setMoviesList: (state, action) => {
       state.list = action.payload;
+      console.log(state.list = action.payload)
     },
+    
   },
 });
 
@@ -34,6 +36,7 @@ export const fetchMovieList =
           `https://api.themoviedb.org/3/movie/${category}?api_key=0fa312df5dd2f644b4e8b8b49a949852&language=en-US&page=1`
         );
         dispatch(setMoviesList(response.data.results));
+   
       })
       .catch((error) => console.log(error));
   };
